@@ -1,69 +1,64 @@
-﻿namespace GalacticQuest
+﻿using System;
+using System.Collections.Generic;
+
+namespace GalacticQuest
 {
     public class Player
     {
-        public int Hp { get; private set; } = 100;
-        public int Attack { get; private set; } = 10;
-        public List<(string, int)> Items { get; private set; } = new List<(string, int)>();
+        public int Hp { get; set; }
+        public int Level { get; set; }
+        
+        public int Credits { get; set; }
+        
+        public List<(string, int)> Items { get; set; }
 
-        public Player(int hp, int attack, List<(string, int)> items)
+        public Player(int hp, int level, List<(string, int)> items)
         {
             Hp = hp;
-            Attack = attack;
+            Level = level;
             Items = items;
-        }
-
-        public Player(int hp, int attack)
-        {
-            Hp = hp;
-            Attack = attack;
-        }
-
-        public Player(int hp)
-        {
-            Hp = hp;
-        }
-
-        public Player()
-        {
-        }
-
-        public void UpdateHp(int hp)
-        {
-            Hp += hp;
-
-            if (Hp <= 0)
-            {
-                Hp = 0;
-                return;
-            }
+            Credits = 0;
         }
 
         public void ShowProfile()
         {
-            Console.WriteLine("Displaying Player Profile:");
-
-            Console.WriteLine($"Player HP: {Hp}");
-            Console.Write("\n");
-
-            Console.WriteLine("Player Items: ");
-            for (int index = 0; index < Items.Count; ++index)
+            Console.WriteLine($"Player Profile - Level: {Level}, HP: {Hp}, Credits: {Credits}");
+            Console.WriteLine("Items:");
+            foreach (var item in Items)
             {
-                Console.WriteLine($"Item -> Name: {Items[index].Item1}" + " | " + $"Attack: {Items[index].Item2}");
+                Console.WriteLine($"- {item.Item1} (Value: {item.Item2})");
             }
-            Console.Write("\n");
+        }
 
-            Console.WriteLine($"Player Attack: {Attack}");
-            int playerTotalAttack = Attack;
-            for (int index = 0; index < Items.Count; ++index)
+        public void UpdateHp(int amount)
+        {
+            Hp += amount;
+            if (Hp <= 0)
             {
-                string itemName = Items[index].Item1;
-                int itemAttack = Items[index].Item2;
-
-                playerTotalAttack += itemAttack;
+                OnDeath();
             }
-            Console.WriteLine($"Player Attack (Combined With Items Attack): {playerTotalAttack}");
-            Console.Write("\n");
+        }
+        
+        private void OnDeath()
+        {
+            Console.WriteLine("You have perished in the cold void of space. Game Over.");
+        }
+        
+        public void UpdateCredits(int amount)
+        {
+            Credits += amount;
+        }
+        
+        public void ManageItem((string, int) item, bool isBuying)
+        {
+            if (isBuying)
+            {
+                Items.Add(item);
+            }
+            else
+            {
+                Items.Remove(item);
+            }
         }
     }
 }
