@@ -2,13 +2,15 @@
 {
     public abstract class Monster
     {
-        public virtual string Name { get; set; } = "Unknown Monster";
-        public virtual int Hp { get; set; } = 50;
-        public virtual int Attack { get; set; } = 10;
+        public string Name { get; set; }
+        public int Hp { get; set; }
+        public int Attack { get; set; }
 
-        public Monster()
+        public Monster(string name, int hp, int attack)
         {
-            BattleCry();
+            Name = name;
+            Hp = hp;
+            Attack = attack;
         }
 
         public abstract void BattleCry();

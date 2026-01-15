@@ -1,15 +1,18 @@
 ﻿using GalacticQuest.Items;
 using GalacticQuest.Monsters;
+using GalacticQuest.Planets;
 
 namespace GalacticQuest
 {
     internal class Program
     {
+        internal static Player currentPlayer = new Player(100, 10, 250); 
+
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, Galactic Quest!");
 
-            CreateAndDisplayPlayerStats();
+            //CreateAndDisplayPlayerStats();
 
             OpenMainMenu();
         }
@@ -34,27 +37,27 @@ namespace GalacticQuest
             }
         }
 
-        internal static void CreateAndDisplayPlayerStats()
-        {
-            Console.Write("\n");
+        //internal static void CreateAndDisplayPlayerStats()
+        //{
+        //    Console.Write("\n");
 
-            List<(string, int)> items = new List<(string, int)>() { ("Excalibur", 500), ("Tessaiga", 1000) };
-            Player player = new Player(50, 1, items, 10);
-            //Player player = new Player(50, 1, items);
-            //Player player = new Player(40, 2);
-            //Player player = new Player(30);
-            //Player player = new Player();
+        //    List<(string, int)> items = new List<(string, int)>() { ("Excalibur", 500), ("Tessaiga", 1000) };
+        //    Player player = new Player(50, 1, 10);
+        //    //Player player = new Player(50, 1, items);
+        //    //Player player = new Player(40, 2);
+        //    //Player player = new Player(30);
+        //    //Player player = new Player();
 
-            player.ShowProfile();
+        //    player.ShowProfile();
 
-            (string, int) newItem = ("Dragon Slayer", 1500);
-            player.AddItem(newItem, 6);
+        //    (string, int) newItem = ("Dragon Slayer", 1500);
+        //    player.AddItemToBackpack(newItem);
 
-            player.ShowProfile();
+        //    player.ShowProfile();
 
-            player.UpdateHp(-60);
-            Console.WriteLine($"After updating HP: {player.Hp}");
-        }
+        //    player.UpdateHp(-60);
+        //    Console.WriteLine($"After updating HP: {player.Hp}");
+        //}
 
         internal static void OpenMainMenu()
         {
@@ -63,7 +66,7 @@ namespace GalacticQuest
             while (stillInRun)
             {
                 Console.Write("\n");
-                Console.WriteLine("Select your option and press Enter: \n 1.Travel \n 2.Journal \n 3.Finish Run \n");
+                Console.WriteLine("Select your option and press Enter: \n 1.Travel \n 2.Journal \n 3.Backpack \n 4.Finish Run \n");
                 int.TryParse(Console.ReadLine(), out int readOption);
 
                 try
@@ -79,6 +82,10 @@ namespace GalacticQuest
                             break;
 
                         case 3:
+                            OpenBackpackMenu();
+                            break;
+
+                        case 4:
                             stillInRun = false;
                             break;
 
@@ -106,10 +113,12 @@ namespace GalacticQuest
             {
                 case 1:
                     Console.WriteLine("Selected Explore");
+                    PlanetHelper.TravelToRandomPlanet();
                     break;
 
                 case 2:
                     Console.WriteLine("Selected Search For Items");
+                    PlanetHelper.SearchForItems();
                     break;
 
                 case 3:
@@ -156,23 +165,24 @@ namespace GalacticQuest
             }
         }
 
-        internal static void CreateAndDisplayMonsters()
-        {
-            Console.Write("\n");
-            Console.WriteLine("Displaying Created Monsters:");
+      internal static void CreateAndDisplayMonsters()
+      {
+         Console.Write("\n");
+         Console.WriteLine("Displaying Created Monsters:");
 
-            List<Monster> monsters = new List<Monster>()
+         Random randomGenerator = new Random();
+         List<Monster> monsters = new List<Monster>()
             {
-                new Glorbazorg(),
-                new Xenotutzi(),
-                new Kryostasis(),
-                new Ignifax()
+                new Glorbazorg("Glorbazorg", randomGenerator.Next(10, 100), randomGenerator.Next(10, 100)),
+                new Xenotutzi("Xenotutzi", randomGenerator.Next(10, 100), randomGenerator.Next(10, 100)),
+                new Kryostasis("Kryostasis", randomGenerator.Next(10, 100), randomGenerator.Next(10, 100)),
+                new Ignifax("Ignifax", randomGenerator.Next(10, 100), randomGenerator.Next(10, 100))
             };
 
-            ShowMonsters(monsters);
-        }
+         ShowMonsters(monsters);
+      }
 
-        internal static void ShowMonsters(List<Monster> monsters)
+      internal static void ShowMonsters(List<Monster> monsters)
         {
             Console.Write("\n");
             Console.WriteLine("The monsters are : ");
@@ -210,7 +220,36 @@ namespace GalacticQuest
             }
         }
 
-        internal static void FilterMonstersByName(List<Monster> monsters)
+         internal static void OpenBackpackMenu()
+         {
+            Console.Write("\n");
+            Console.WriteLine("Displaying the Backpack menu\n");
+
+            Console.WriteLine("Select your option and press Enter: \n 1.Show current items in backpack.\n 2.Add a basic DoomFist to backpack\n 3.Back to Main Menu\n");
+
+            int.TryParse(Console.ReadLine(), out int userOption);
+
+            switch (userOption)
+            {
+               case 1:
+                  currentPlayer.ShowItemsInBackpack();
+                  break;
+
+               case 2:
+                  Item basicItem = new DoomFist("Basic doomfist", 100, 20);
+                  currentPlayer.AddItemToBackpack(basicItem);
+                  break;
+
+               case 3:
+                  break;
+
+               default:
+                  Console.WriteLine("Invalid Option. Please try a valid option.");
+                  break;
+            }
+         }
+
+      internal static void FilterMonstersByName(List<Monster> monsters)
         {
             Console.WriteLine("Enter letters to filter monsters: ");
             string? userInput = Console.ReadLine();

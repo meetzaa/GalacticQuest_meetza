@@ -2,9 +2,10 @@
 {
     public class Ignifax : Monster
     {
-        public override string Name { get; set; } = "Ignifax ";
-        public override int Hp { get; set; } = 140;
-        public override int Attack { get; set; } = 15;
+        public Ignifax(string name, int hp, int attack) : base(name, hp, attack)
+        {
+            BattleCry();
+        }
 
         public override void BattleCry()
         {

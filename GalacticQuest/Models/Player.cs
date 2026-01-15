@@ -1,25 +1,22 @@
-﻿namespace GalacticQuest
+﻿using GalacticQuest.Items;
+using System;
+using System.Reflection;
+
+namespace GalacticQuest
 {
     public class Player
     {
         public int Hp { get; private set; } = 100;
         public int Attack { get; private set; } = 10;
-        public List<(string, int)> Items { get; private set; } = new List<(string, int)>();
+
+        public List<Item> Backpack { get; private set; } = new List<Item>();
         public int Credits { get; private set; } = 0;
 
-        public Player(int hp, int attack, List<(string, int)> items, int credits)
+        public Player(int hp, int attack, int credits)
         {
             Hp = hp;
             Attack = attack;
-            Items = items;
             Credits = credits;
-        }
-
-        public Player(int hp, int attack, List<(string, int)> items)
-        {
-            Hp = hp;
-            Attack = attack;
-            Items = items;
         }
 
         public Player(int hp, int attack)
@@ -30,12 +27,13 @@
 
         public Player(int hp)
         {
-            Hp = hp;
+           Hp = hp;
         }
 
         public Player()
         {
         }
+
         public void UpdateHp(int hp)
         {
             Hp += hp;
@@ -51,20 +49,50 @@
             Console.WriteLine("Player has died. Game Over. (-_-')");
         }
 
-        public void AddItem((string, int) item, int price)
+        /// <summary>
+        /// Adds an item to the backpack
+        /// </summary>
+        /// <param name="item"> The item to add into the backpack </param>
+        public void AddItemToBackpack(Item item)
         {
-            if (Credits < price)
+           if(item is null)
+           {
+              return;
+           }
+
+           Backpack.Add(item);
+        }
+         
+        /// <summary>
+        /// Writes the current items in the backpack to the console
+        /// </summary>
+        public void ShowItemsInBackpack()
+        {
+           Console.Write("\n");
+           if (Backpack.Count < 1)
+           {
+              Console.WriteLine("No items in the backpack currently");
+           }
+
+           foreach( Item item in Backpack)
+           {
+              Console.WriteLine($"Item -> Name: {item.Name} | Attack: {item.Attack} | Resistance: {item.Resitance}");
+           }
+        }
+        
+        /// <summary>
+        /// Removes an item from the backpack
+        /// </summary>
+        /// <param name="item"> The item to remove from the backpack </param>
+        /// <returns> True if the item is removed successfully or false otherwise </returns>
+        private bool RemoveItemFromBackpack(Item item)
+        {
+            if (item is null || Backpack.Count < 1)
             {
-                {
-                    Console.WriteLine("Not enough credits to purchase this item.");
-                    return;
-                }
-
+               return false;
             }
-
-            UpdateCredits(-price);
-
-            Items.Add(item);
+            
+            return Backpack.Remove(item);         
         }
 
         private void UpdateCredits(int credits)
@@ -80,25 +108,20 @@
             Console.WriteLine($"Player HP: {Hp}");
             Console.Write("\n");
 
-            Console.WriteLine($"Player Credits: {Credits}");
+            Console.WriteLine("Player Backpack items: ");
+            ShowItemsInBackpack();
             Console.Write("\n");
 
-            Console.WriteLine("Player Items: ");
-            for (int index = 0; index < Items.Count; ++index)
-            {
-                Console.WriteLine($"Item -> Name: {Items[index].Item1}" + " | " + $"Attack: {Items[index].Item2}");
-            }
+            Console.WriteLine($"Player Credits: {Credits}");
             Console.Write("\n");
 
             Console.WriteLine($"Player Attack: {Attack}");
             int playerTotalAttack = Attack;
-            for (int index = 0; index < Items.Count; ++index)
+            for (int index = 0; index < Backpack.Count; ++index)
             {
-                string itemName = Items[index].Item1;
-                int itemAttack = Items[index].Item2;
-
-                playerTotalAttack += itemAttack;
+                playerTotalAttack += Backpack[index].Attack;
             }
+
             Console.WriteLine($"Player Attack (Combined With Items Attack): {playerTotalAttack}");
             Console.WriteLine("/-------------------------/");
             Console.Write("\n");

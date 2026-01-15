@@ -2,9 +2,10 @@
 {
     public class Glorbazorg : Monster
     {
-        public override string Name { get; set; } = "Glorbazorg";
-        public override int Hp { get; set; } = 100;
-        public override int Attack { get; set; } = 30;
+        public Glorbazorg(string name, int hp, int attack) : base(name, hp, attack)
+        {
+            BattleCry();
+        }
 
         public override void BattleCry()
         {

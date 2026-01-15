@@ -2,9 +2,10 @@
 {
     public class Xenotutzi : Monster
     {
-        public override string Name { get; set; } = "Xenotutzi ";
-        public override int Hp { get; set; } = 140;
-        public override int Attack { get; set; } = 15;
+        public Xenotutzi(string name, int hp, int attack) : base(name, hp, attack)
+        {
+            BattleCry();
+        }
 
         public override void BattleCry()
         {
